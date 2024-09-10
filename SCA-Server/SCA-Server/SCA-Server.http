@@ -1,0 +1,6 @@
+@SCA_Server_HostAddress = http://localhost:5008
+
+GET {{SCA_Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
