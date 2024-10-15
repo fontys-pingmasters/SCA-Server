@@ -31,10 +31,7 @@ public class UserService : IUserService
     {
         var user = _userRepository.GetUserByEmail(email);
         
-        if (user == null || !VerifyPassword(password, user.Password))
-        {
-            return false;
-        }
+        if (user == null || !VerifyPassword(password, user.Password)) return false;
         
         return true;
     }

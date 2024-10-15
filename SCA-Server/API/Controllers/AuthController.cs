@@ -1,5 +1,6 @@
 using Business.Dtos;
 using Business.Entities;
+using Business.Enums;
 using Business.Exceptions;
 using Business.Services;
 using Microsoft.AspNetCore.Identity.Data;
@@ -11,7 +12,7 @@ namespace SCA_Server.Controllers;
 [Route("[controller]")]
 public class AuthController(IUserService userService, ITokenService tokenService) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
         if (!userService.ValidateUser(request.Email, request.Password)) return Unauthorized();
@@ -22,15 +23,11 @@ public class AuthController(IUserService userService, ITokenService tokenService
         return Ok(new { token });
     }
     
-    [HttpPost]
+    [HttpPost("register")]
     public IActionResult Register([FromBody] RegisterDto registerDto)
     {
-        User user;
-        
-        try { user = userService.RegisterUser(registerDto); } 
+        try { User user = userService.RegisterUser(registerDto); return Ok (new {user}); }
         catch (Exception e) { return BadRequest(e.Message); }
-        
-        return Ok( new {user} );
     }
     
 }
