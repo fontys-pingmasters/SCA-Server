@@ -1,8 +1,8 @@
 ﻿using Business.Entities;
 using Business.Services;
+using DAL.Dto_s;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SCA_Server.RequestModels;
 
 namespace SCA_Server.Controllers
 {
@@ -11,15 +11,15 @@ namespace SCA_Server.Controllers
 	public class MatchController(IMatchService matchService) : ControllerBase
 	{
 		[HttpPost]
-		public async Task<IActionResult> CreateMatch(RequestModels.MatchRequest matchRequest)
+		public async Task<IActionResult> CreateMatch(MatchDto matchDto)
 		{
 			Match newMatch = new()
 			{
-				UserIdPlayer = matchRequest.UserIdPlayer,
-				UserIdPlayer2 = matchRequest.UserIdPlayer2,
-				UserIdOpponent = matchRequest.UserIdOpponent,
-				UserIdOpponent2 = matchRequest.UserIdOpponent2,
-				IsDoubleMatch = matchRequest.IsDoubleMatch,
+				UserIdPlayer = matchDto.UserIdPlayer,
+				UserIdPlayer2 = matchDto.UserIdPlayer2,
+				UserIdOpponent = matchDto.UserIdOpponent,
+				UserIdOpponent2 = matchDto.UserIdOpponent2,
+				IsDoubleMatch = matchDto.IsDoubleMatch,
 			};
 
 			await matchService.CreateMatch(newMatch);
