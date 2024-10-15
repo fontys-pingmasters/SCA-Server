@@ -7,7 +7,7 @@ namespace SCA_Server.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     [HttpGet]
     public IActionResult Test()
     {

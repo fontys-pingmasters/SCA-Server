@@ -1,6 +1,6 @@
 namespace Business.Entities;
 
-public class Team
+public class Team : Common
 {
     public int ClubId { get; set; }
     public Club Club { get; set; }
