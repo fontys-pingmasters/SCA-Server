@@ -13,6 +13,7 @@ public static class DependencyInjection
             options.UseInMemoryDatabase("InMemoryDb"));
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IMatchRepository, MatchRepository>();
 
         return services;
     }
