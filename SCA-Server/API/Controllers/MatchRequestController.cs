@@ -13,7 +13,7 @@ namespace SCA_Server.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreateMatchRequest(MatchRequestDto matchRequestDto)
 		{
-			MatchRequest newMatchRequest = new()
+			MatchRequest newMatchRequest = new()	// Create match when creating matchrequest
 			{
 				MatchId = matchRequestDto.MatchId,
 				Status = matchRequestDto.Status

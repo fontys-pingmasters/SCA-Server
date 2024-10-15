@@ -10,5 +10,7 @@ namespace Business.Repositories
 	public interface IMatchRepository
 	{
 		Task CreateMatch(Match match);
+		Task<Match> GetMatchById(int matchId);
+		Task UpdateMatch(Match match);
 	}
 }

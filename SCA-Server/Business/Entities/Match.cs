@@ -13,6 +13,7 @@ public class Match : Common
     public int PlayerScore { get; set; } = 0;
     public int OpponentScore { get; set; } = 0;
     public bool IsDoubleMatch { get; set; } = false;
+    public bool IsCompleted { get; set; } = false;
 
     public ICollection<CompetitionMatch>? CompetitionMatches { get; set; }
 }

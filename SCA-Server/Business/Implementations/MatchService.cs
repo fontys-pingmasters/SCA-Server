@@ -15,5 +15,43 @@ namespace Business.Implementations
 		{
 			await matchRepository.CreateMatch(match);
 		}
+
+		public async Task<Match?> GetMatchById(int matchId)
+		{
+			return await matchRepository.GetMatchById(matchId);
+		}
+
+		public async Task UpdateScore(int matchId, int scoringPlayerId)
+		{
+			var match = await matchRepository.GetMatchById(matchId) ?? throw new ArgumentException("Match not found.");
+			if (match.IsCompleted)
+			{
+				throw new InvalidOperationException("Cannot update scores for a completed match.");
+			}
+
+			bool playerScore = scoringPlayerId == match.UserIdPlayer;
+			bool opponentScore = scoringPlayerId == match.UserIdOpponent;
+			int matchEndGameCount = 3;
+
+			if (playerScore)
+			{
+				match.PlayerScore += 1;
+			}
+			else if (opponentScore)
+			{
+				match.OpponentScore += 1;
+			}
+			else
+			{
+				throw new ArgumentException("Invalid player ID.");
+			}
+
+			if (match.PlayerScore == matchEndGameCount || match.OpponentScore == matchEndGameCount)
+			{
+				match.IsCompleted = true;
+			}
+
+			await matchRepository.UpdateMatch(match);
+		}
 	}
 }
