@@ -1,13 +1,17 @@
-using Common.Entities;
+using Business.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
+    }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
     }
         public DbSet<User> Users { get; set; }
         public DbSet<Club> Clubs { get; set; }

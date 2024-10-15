@@ -1,6 +1,5 @@
 using Business.Implementations;
 using Business.Services;
-using DAL;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Business;
@@ -9,10 +8,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddBusiness(this IServiceCollection services)
     {
-        services.AddScoped<UserService, UserServiceImpl>();
-        services.AddDAL();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ITokenService, TokenService>();
 
         return services;
     }
-    
 }

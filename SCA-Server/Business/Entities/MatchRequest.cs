@@ -1,6 +1,6 @@
-using Common.Enums;
+using Business.Enums;
 
-namespace Common.Entities;
+namespace Business.Entities;
 
 public class MatchRequest
 {

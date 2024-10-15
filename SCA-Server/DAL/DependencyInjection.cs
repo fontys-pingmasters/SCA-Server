@@ -1,4 +1,5 @@
-using DAL.Repositories;
+using Business.Repositories;
+using DAL.Implementations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +12,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseInMemoryDatabase("InMemoryDb"));
 
-        services.AddScoped<UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

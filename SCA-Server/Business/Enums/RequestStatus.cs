@@ -1,4 +1,4 @@
-namespace Common.Enums;
+namespace Business.Enums;
 
 public enum RequestStatus
 {
