@@ -1,10 +1,16 @@
 using Business.Entities;
 using Business.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Implementations;
 
 public class UserRepository(ApplicationDbContext context) : IUserRepository
 {
+    public async Task<List<User>> GetUsers()
+    {
+        return await context.Users.ToListAsync();
+    }
+
     public User CreateUser()
     {
         context.Users.Add(new User());
@@ -12,9 +18,9 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
         return context.Users.First();
     }
 
-    public User GetUserById(int id)
+    public async Task<User?> GetUserById(int id)
     {
-        throw new NotImplementedException();
+        return await context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
     }
 
     public User GetUserByEmail(string email)

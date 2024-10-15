@@ -1,3 +1,4 @@
+using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,13 +6,20 @@ namespace SCA_Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
-    [Authorize]
     [HttpGet]
-    public IActionResult Test()
+    public async Task<IActionResult> GetUsers()
     {
-        return Ok();
+        var users = await userService.GetUsers();
+        return Ok(users);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUserById(int id)
+    {
+        var user = await userService.GetUserById(id);
+        return Ok(user);
     }
     
     [HttpPost]

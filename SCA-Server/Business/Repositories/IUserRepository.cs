@@ -4,7 +4,8 @@ namespace Business.Repositories;
 
 public interface IUserRepository
 {
+    Task<List<User>> GetUsers();
     User CreateUser();
-    User GetUserById(int id);
+    Task<User?> GetUserById(int id);
     User GetUserByEmail(string email);
 }

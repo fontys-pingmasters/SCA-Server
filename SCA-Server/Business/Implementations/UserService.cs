@@ -4,10 +4,13 @@ using Business.Services;
 
 namespace Business.Implementations;
 
-public class UserService : IUserService
+public class UserService(IUserRepository userRepository) : IUserService
 {
-    private readonly IUserRepository _userRepository;
-    
+    public async Task<List<User>> GetUsers()
+    {
+        return await userRepository.GetUsers();
+    }
+
     public User CreateUser()
     {
         throw new NotImplementedException();
@@ -15,7 +18,7 @@ public class UserService : IUserService
 
     public bool ValidateUser(string email, string password)
     {
-        var user = _userRepository.GetUserByEmail(email);
+        var user = userRepository.GetUserByEmail(email);
         
         if (user == null || !VerifyPassword(password, user.Password))
         {
@@ -25,9 +28,14 @@ public class UserService : IUserService
         return true;
     }
 
+    public async Task<User?> GetUserById(int id)
+    {
+        return await userRepository.GetUserById(id);
+    }
+
     public User GetUserByEmail(string email)
     {
-        return _userRepository.GetUserByEmail(email);
+        return userRepository.GetUserByEmail(email);
     }
 
     private bool VerifyPassword(string password, string passwordHash)
