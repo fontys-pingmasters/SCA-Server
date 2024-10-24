@@ -5,6 +5,6 @@ namespace Business.Repositories;
 public interface IUserRepository
 {
     User CreateUser(User user);
-    User GetUserById(int id);
+    User? GetUserById(int id);
     User GetUserByEmail(string email);
 }

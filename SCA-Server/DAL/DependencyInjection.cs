@@ -7,10 +7,10 @@ namespace DAL;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddDAL(this IServiceCollection services)
+    public static IServiceCollection AddDAL(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseInMemoryDatabase("InMemoryDb"));
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
         services.AddScoped<IUserRepository, UserRepository>();
 

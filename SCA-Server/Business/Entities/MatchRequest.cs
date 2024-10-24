@@ -4,8 +4,8 @@ namespace Business.Entities;
 
 public class MatchRequest : Common
 {
-    public int MatchId { get; set; }
+    public User Sender { get; set; }
+    public User Receiver { get; set; } 
     public Match Match { get; set; }
-    public bool IsDoubleMatch { get; set; } = false;
     public RequestStatus Status { get; set; } = RequestStatus.Pending;
 }

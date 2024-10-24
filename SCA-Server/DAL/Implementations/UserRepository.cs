@@ -7,7 +7,7 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
 { 
     public User CreateUser(User user)
     {
-        context.Users.Add(new User());
+        context.Users.Add(user);
         context.SaveChanges();
         return context.Users.First();
     }
@@ -16,9 +16,8 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
         throw new NotImplementedException();
     }
-
-    public User GetUserByEmail(string email)
+    public User? GetUserByEmail(string email)
     {
-        throw new NotImplementedException();
+        return context.Users.FirstOrDefault(u => u.Email == email);
     }
 }
