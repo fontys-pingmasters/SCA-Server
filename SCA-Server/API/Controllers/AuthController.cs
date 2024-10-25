@@ -5,6 +5,7 @@ using Business.Exceptions;
 using Business.Services;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using RegisterRequest = Business.Dtos.RequestDtos.RegisterRequest;
 
 namespace SCA_Server.Controllers;
 
@@ -24,9 +25,9 @@ public class AuthController(IUserService userService, ITokenService tokenService
     }
     
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterDto registerDto)
+    public IActionResult Register([FromBody] RegisterRequest registerRequest)
     {
-        try { User user = userService.RegisterUser(registerDto); return Ok (new {user}); }
+        try { User user = userService.RegisterUser(registerRequest); return Ok (new {user}); }
         catch (Exception e) { return BadRequest(e.Message); }
     }
     

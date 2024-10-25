@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +9,20 @@ namespace SCA_Server.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    [Authorize (Roles = "Admin")]
-    [HttpGet]
-    public IActionResult Test()
+    IUserService _userService;
+    
+    public UserController(IUserService userService)
     {
-        return Ok();
+        _userService = userService;
+    }
+    
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetAllUsersExceptCurrent()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        return Ok(_userService.GetAllUsersExceptCurrentUser(int.Parse(userId)));
     }
     
     [HttpPost]

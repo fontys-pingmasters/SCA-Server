@@ -123,6 +123,11 @@ public class ApplicationDbContext : DbContext
             .WithMany(u => u.MatchesAsOpponent2)
             .HasForeignKey("Opponent2Id")
             .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Match>()
+            .HasMany(m => m.MatchRequests)
+            .WithOne(mr => mr.Match)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Define EloHistory relationships
         modelBuilder.Entity<EloHistory>()

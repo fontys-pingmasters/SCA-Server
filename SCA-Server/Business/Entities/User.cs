@@ -10,10 +10,10 @@ public class User : Common
     public string Email { get; set; }
     public Roles Role { get; set; } = Roles.User;
 
-    public ICollection<EloHistory> EloHistories { get; set; } = new HashSet<EloHistory>();
-    public ICollection<TeamMembership> TeamMemberships { get; set; } = new HashSet<TeamMembership>();
-    public ICollection<Match> MatchesAsPlayer1 { get; set; } = new HashSet<Match>();
-    public ICollection<Match> MatchesAsPlayer2 { get; set; } = new HashSet<Match>();
-    public ICollection<Match> MatchesAsOpponent1 { get; set; } = new HashSet<Match>();
-    public ICollection<Match> MatchesAsOpponent2 { get; set; } = new HashSet<Match>();
+    public ICollection<EloHistory> EloHistories { get; set; } = new List<EloHistory>();
+    public ICollection<TeamMembership> TeamMemberships { get; set; } = new List<TeamMembership>();
+    public ICollection<Match> MatchesAsPlayer1 { get; set; } = new List<Match>();
+    public ICollection<Match> MatchesAsPlayer2 { get; set; } = new List<Match>();
+    public ICollection<Match> MatchesAsOpponent1 { get; set; } = new List<Match>();
+    public ICollection<Match> MatchesAsOpponent2 { get; set; } = new List<Match>();
 }

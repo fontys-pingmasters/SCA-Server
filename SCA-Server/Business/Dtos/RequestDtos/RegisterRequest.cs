@@ -1,8 +1,8 @@
 using Business.Enums;
 
-namespace Business.Dtos;
+namespace Business.Dtos.RequestDtos;
 
-public class RegisterDto
+public class RegisterRequest
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

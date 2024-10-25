@@ -9,15 +9,20 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
         context.Users.Add(user);
         context.SaveChanges();
-        return context.Users.First();
+        return context.Users.FirstOrDefault(u => u.Id == user.Id);
     }
 
     public User GetUserById(int id)
     {
-        throw new NotImplementedException();
+        return context.Users.FirstOrDefault(u => u.Id == id);
     }
     public User? GetUserByEmail(string email)
     {
         return context.Users.FirstOrDefault(u => u.Email == email);
+    }
+
+    public List<User> GetAllUsers()
+    {
+        return context.Users.ToList();
     }
 }
