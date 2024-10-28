@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Business.Dtos.RequestDtos;
 
-public class CreateMatchRequest
+public class CreateMatchReq
 {
     [JsonIgnore]
     public int CreatorId { get; set; }

@@ -9,39 +9,60 @@ using Business.Services;
 
 namespace Business.Implementations;
 
-public class UserService(IUserRepository userRepository) : IUserService
+public partial class UserService() : IUserService
 {
+    [GeneratedRegex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
+    private static partial Regex EmailRegex();
+    [GeneratedRegex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$")]
+    private static partial Regex PasswordRegex();
+    
+    private readonly IUserRepository userRepository;
+    private readonly ITokenService tokenService;
+
+    public UserService(IUserRepository userRepository, ITokenService tokenService) : this()
+    {
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
+    }
+    
     public User GetUserById(int id)
     {
         return userRepository.GetUserById(id) ?? throw new ("User not found");
     }
 
-    public User RegisterUser(RegisterRequest registerRequest)
+    public User RegisterUser(RegisterReq registerReq)
     {
-        if (userRepository.GetUserByEmail(registerRequest.Email) != null) throw new RegistrationException("Email already in use");
-        if (registerRequest.Password != registerRequest.ConfirmPassword) throw new RegistrationException("Passwords do not match");
-        if (Regex.IsMatch(registerRequest.Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$") == false) throw new RegistrationException("Invalid email format");
-        if (Regex.IsMatch(registerRequest.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$") == false) throw new RegistrationException("Password must contain at least 8 characters, one uppercase letter, one lowercase letter and one number");
+        if (userRepository.GetUserByEmail(registerReq.Email) != null) 
+            throw new RegistrationException("Email already in use");
+        if (registerReq.Password != registerReq.ConfirmPassword) 
+            throw new RegistrationException("Passwords do not match");
+        if (EmailRegex().IsMatch(registerReq.Email) == false) 
+            throw new RegistrationException("Invalid email format");
+        if (PasswordRegex().IsMatch(registerReq.Password) == false) 
+            throw new RegistrationException("Password must contain at least 8 characters, one uppercase letter, one lowercase letter and one number");
         
-        User newUser = UserMapper.RegisterDtoToUser(registerRequest);
+        var newUser = UserMapper.RegisterDtoToUser(registerReq);
         
         newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
         
         return userRepository.CreateUser(newUser);
     }
 
-    public bool ValidateUser(string email, string password)
+    public string LoginUserReturnToken(LoginReq loginReq)
     {
-        var user = userRepository.GetUserByEmail(email);
+        var user = userRepository.GetUserByEmail(loginReq.Email) ?? 
+                   throw new ResourceNotFoundException($"User with email:{loginReq.Email} not found");
         
-        if (user == null || !VerifyPassword(password, user.Password)) return false;
+        if (!VerifyPassword(loginReq.Password, user.Password)) 
+            throw new UnauthorizedException("Invalid password");
         
-        return true;
+        return tokenService.GenerateToken(user);
     }
-
+    
     public User GetUserByEmail(string email)
     {
-        return userRepository.GetUserByEmail(email);
+        return userRepository.GetUserByEmail(email) ?? 
+               throw new ResourceNotFoundException($"User with email:{email} not found");
     }
 
     public List<User> GetAllUsers()

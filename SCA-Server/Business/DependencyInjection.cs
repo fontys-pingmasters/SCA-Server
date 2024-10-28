@@ -8,8 +8,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddBusiness(this IServiceCollection services)
     {
-        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMatchService, MatchService>();
 
         return services;

@@ -1,11 +1,11 @@
 using Business.Dtos;
+using Business.Dtos.RequestDtos;
 using Business.Entities;
 using Business.Enums;
 using Business.Exceptions;
 using Business.Services;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using RegisterRequest = Business.Dtos.RequestDtos.RegisterRequest;
 
 namespace SCA_Server.Controllers;
 
@@ -14,21 +14,27 @@ namespace SCA_Server.Controllers;
 public class AuthController(IUserService userService, ITokenService tokenService) : ControllerBase
 {
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public IActionResult Login([FromBody] LoginReq request)
     {
-        if (!userService.ValidateUser(request.Email, request.Password)) return Unauthorized();
-        
-        var user = userService.GetUserByEmail(request.Email);
-        var token = tokenService.GenerateToken(user);
-        
-        return Ok(new { token });
+        try {
+            var token = userService.LoginUserReturnToken(request); 
+            return Ok(new { token });
+        }
+        catch (ResourceNotFoundException e) { return BadRequest(e.Message); }
+        catch (UnauthorizedException e) { return Unauthorized(e.Message); }
+        catch (Exception e) { return StatusCode(500, e.Message); }
     }
     
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterRequest registerRequest)
+    public IActionResult Register([FromBody] RegisterReq registerReq)
     {
-        try { User user = userService.RegisterUser(registerRequest); return Ok (new {user}); }
-        catch (Exception e) { return BadRequest(e.Message); }
+        try
+        {
+            var user = userService.RegisterUser(registerReq); 
+            return Ok (new {user});
+        }
+        catch (RegistrationException e) { return BadRequest(e.Message); }
+        catch (Exception e) { return StatusCode(500, e.Message); }
     }
     
 }

@@ -10,37 +10,32 @@ namespace SCA_Server.Controllers;
 public class UserController : ControllerBase
 {
     IUserService _userService;
-    
+
     public UserController(IUserService userService)
     {
         _userService = userService;
     }
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetAllUsers()
+    {
+        var result = _userService.GetAllUsers();
+        return Ok(result);
+    }
     
     [Authorize]
     [HttpGet]
-    public IActionResult GetAllUsersExceptCurrent()
+    [Route("exceptcurrent")]
+    public IActionResult GetAllUsersExceptCurrentUser()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                                        throw new Exception("Could not find current user id in token"));
         
-        return Ok(_userService.GetAllUsersExceptCurrentUser(int.Parse(userId)));
+        var result = _userService.GetAllUsersExceptCurrentUser(currentUserId);
+        return Ok(result);
     }
     
-    [HttpPost]
-    public IActionResult Post()
-    {
-        return Ok();
-    }
     
-    [HttpPut]
-    public IActionResult Put()
-    {
-        return Ok();
-    }
-    
-    [HttpDelete]
-    public IActionResult Delete()
-    {
-        return Ok();
-    }
     
 }

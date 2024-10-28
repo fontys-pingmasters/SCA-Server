@@ -21,12 +21,27 @@ public class MatchController : ControllerBase
     
     [Authorize]
     [HttpPost]
-    public IActionResult CreateMatch( [FromBody] CreateMatchRequest createMatchRequest)
+    public IActionResult CreateMatch( [FromBody] CreateMatchReq createMatchReq)
     {
-        createMatchRequest.CreatorId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        createMatchReq.CreatorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
+                                             throw new Exception("Could not find current user id in token"));
         
-        var result = _matchService.CreateMatch(createMatchRequest);
+        var result = _matchService.CreateMatch(createMatchReq);
 
+        var match = MatchMapper.MatchToMatchDto(result);
+        
+        return Ok(match);
+    }
+    
+    [Authorize]
+    [HttpPatch]
+    public IActionResult UpdateMatch([FromBody] UpdateMatchReq updateMatchReq)
+    {
+        updateMatchReq.CreatorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
+                                             throw new Exception("Could not find current user id in token"));
+        
+        var result = _matchService.UpdateMatch(updateMatchReq);
+        
         var match = MatchMapper.MatchToMatchDto(result);
         
         return Ok(match);

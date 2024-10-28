@@ -7,15 +7,15 @@ namespace Business.Mappers;
 
 public static class UserMapper
 {
-    public static User RegisterDtoToUser(RegisterRequest registerRequest)
+    public static User RegisterDtoToUser(RegisterReq registerReq)
     {
         return new User
         {
-            FirstName = registerRequest.FirstName,
-            LastName = registerRequest.LastName,
-            Email = registerRequest.Email,
-            Password = registerRequest.Password,
-            Role = registerRequest.Role
+            FirstName = registerReq.FirstName,
+            LastName = registerReq.LastName,
+            Email = registerReq.Email,
+            Password = registerReq.Password,
+            Role = registerReq.Role
         };
     }
     

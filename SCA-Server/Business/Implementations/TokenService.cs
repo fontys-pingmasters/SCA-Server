@@ -13,7 +13,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
     public string GenerateToken(User user)
     {
         var jwtSettings = configuration.GetSection("JwtSettings");
-        var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
+        var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"] ?? string.Empty);
 
         var claims = new List<Claim>
         {

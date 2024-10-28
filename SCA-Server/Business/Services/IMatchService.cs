@@ -5,5 +5,6 @@ namespace Business.Services;
 
 public interface IMatchService
 {
-    Match CreateMatch(CreateMatchRequest createMatchRequest);
+    Match CreateMatch(CreateMatchReq createMatchReq);
+    Match UpdateMatch(UpdateMatchReq updateMatchReq);
 }
