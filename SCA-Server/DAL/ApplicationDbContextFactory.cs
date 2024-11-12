@@ -8,7 +8,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
     public ApplicationDbContext CreateDbContext(string[] args = null) // Optional parameter args
     {
         // Build configuration for design-time context creation
-        var connectionString = "Server=158.101.201.230;Port=3306;Database=sca;Uid=sjors;Pwd=password;";
+        var connectionString = "Server=10.1.2.2;Database=sca;User Id=swremotedb;Password=YellowRed63!;";
 
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
