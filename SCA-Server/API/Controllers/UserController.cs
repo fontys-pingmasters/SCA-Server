@@ -16,7 +16,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [Authorize]
+/*    [Authorize]*/
     [HttpGet]
     public IActionResult GetAllUsers()
     {
@@ -24,7 +24,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
     
-    [Authorize]
+/*    [Authorize]*/
     [HttpGet]
     [Route("exceptcurrent")]
     public IActionResult GetAllUsersExceptCurrentUser()
