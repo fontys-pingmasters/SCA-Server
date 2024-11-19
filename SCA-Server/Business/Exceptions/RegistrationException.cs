@@ -1,0 +1,10 @@
+using System.Runtime.CompilerServices;
+
+namespace Business.Exceptions;
+
+public class RegistrationException : Exception
+{
+    public RegistrationException() : base() { }
+    public RegistrationException(string message) : base(message) { }
+    public RegistrationException(string message, Exception innerException) : base(message, innerException) { }
+}

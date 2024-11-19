@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using Business.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SCA_Server.Controllers;
@@ -6,28 +9,33 @@ namespace SCA_Server.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
+    IUserService _userService;
+
+    public UserController(IUserService userService)
+    {
+        _userService = userService;
+    }
+
+/*    [Authorize]*/
     [HttpGet]
-    public IActionResult Get()
+    public IActionResult GetAllUsers()
     {
-        return Ok();
+        var result = _userService.GetAllUsers();
+        return Ok(result);
     }
     
-    [HttpPost]
-    public IActionResult Post()
+/*    [Authorize]*/
+    [HttpGet]
+    [Route("exceptcurrent")]
+    public IActionResult GetAllUsersExceptCurrentUser()
     {
-        return Ok();
+        var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                                        throw new Exception("Could not find current user id in token"));
+        
+        var result = _userService.GetAllUsersExceptCurrentUser(currentUserId);
+        return Ok(result);
     }
     
-    [HttpPut]
-    public IActionResult Put()
-    {
-        return Ok();
-    }
     
-    [HttpDelete]
-    public IActionResult Delete()
-    {
-        return Ok();
-    }
     
 }
