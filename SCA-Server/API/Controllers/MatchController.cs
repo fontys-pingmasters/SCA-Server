@@ -46,4 +46,18 @@ public class MatchController : ControllerBase
         
         return Ok(match);
     }
+
+    [HttpGet("{matchId}")]
+    public IActionResult GetMatchById(int matchId)
+    {
+        var match = _matchService.GetMatchById(matchId);
+        return Ok(match);
+    }
+
+    [HttpGet]
+    public IActionResult GetAllMatches()
+    {
+        var matches = _matchService.GetAllMatches();
+        return Ok(matches);
+    }
 }
