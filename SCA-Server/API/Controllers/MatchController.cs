@@ -4,6 +4,7 @@ using Business.Mappers;
 using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using SCA_Server.Hubs;
 
 namespace SCA_Server.Controllers;
@@ -13,12 +14,13 @@ namespace SCA_Server.Controllers;
 public class MatchController : ControllerBase
 {
     
-    IMatchService _matchService;
-    private readonly MatchHub _matchHub;
+    private readonly IMatchService _matchService;
+    private readonly IHubContext<MatchHub> _matchHub;
     
-    public MatchController(IMatchService matchService)
+    public MatchController(IMatchService matchService, IHubContext<MatchHub> matchHub)
     {
         _matchService = matchService;
+        _matchHub = matchHub;
     }
     
     /*[Authorize]*/
@@ -37,7 +39,7 @@ public class MatchController : ControllerBase
     
     /*[Authorize]*/
     [HttpPatch]
-    public IActionResult UpdateMatch([FromBody] UpdateMatchReq updateMatchReq)
+    public async Task<IActionResult> UpdateMatch([FromBody] UpdateMatchReq updateMatchReq)
     {
         updateMatchReq.CreatorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
                                              throw new Exception("Could not find current user id in token"));
@@ -47,8 +49,9 @@ public class MatchController : ControllerBase
         var match = MatchMapper.MatchToMatchDto(result);
         
         var allMatches = _matchService.GetAllMatches();
-        
-        _matchHub.SendLiveScores(allMatches);
+
+
+        await _matchHub.Clients.All.SendAsync("ReceiveMessage", allMatches);
         
         return Ok(match);
     }

@@ -7,6 +7,13 @@ public class MatchHub : Hub
 {
     public async Task SendLiveScores(List<Match> matches)
     {
-        await Clients.All.SendAsync("ReceiveMessage", matches);
+        try
+        {
+            await Clients.All.SendAsync("ReceiveMessage", matches);
+        }
+        catch(Exception e)
+        {
+            Console.Write(e);
+        }
     }
 }

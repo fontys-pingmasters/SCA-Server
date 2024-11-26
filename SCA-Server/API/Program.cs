@@ -2,6 +2,7 @@ using System.Text;
 using Business;
 using DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SCA_Server.Hubs;
@@ -27,6 +28,7 @@ builder.Services.AddSignalR(options =>
 {
     options.KeepAliveInterval = TimeSpan.FromMinutes(1);
     options.ClientTimeoutInterval = TimeSpan.FromMinutes(2);
+    options.EnableDetailedErrors = true;
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -109,7 +111,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseWebSockets();
 
-app.MapHub<MatchHub>("/matchhub");
+app.MapHub<MatchHub>("/matchHub");
 
 
 app.UseCors();
