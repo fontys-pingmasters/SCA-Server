@@ -4,6 +4,7 @@ using Business.Mappers;
 using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SCA_Server.Hubs;
 
 namespace SCA_Server.Controllers;
 
@@ -13,6 +14,7 @@ public class MatchController : ControllerBase
 {
     
     IMatchService _matchService;
+    private readonly MatchHub _matchHub;
     
     public MatchController(IMatchService matchService)
     {
@@ -43,6 +45,10 @@ public class MatchController : ControllerBase
         var result = _matchService.UpdateMatch(updateMatchReq);
         
         var match = MatchMapper.MatchToMatchDto(result);
+        
+        var allMatches = _matchService.GetAllMatches();
+        
+        _matchHub.SendLiveScores(allMatches);
         
         return Ok(match);
     }

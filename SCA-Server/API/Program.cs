@@ -109,7 +109,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseWebSockets();
 
-app.MapHub<MyHub>("/Hubs/MyHub");
+app.MapHub<MatchHub>("/matchhub");
 
 
 app.UseCors();

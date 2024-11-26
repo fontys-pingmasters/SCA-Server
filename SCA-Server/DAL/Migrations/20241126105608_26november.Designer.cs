@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241112124015_HostedDb")]
-    partial class HostedDb
+    [Migration("20241126105608_26november")]
+    partial class _26november
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,6 +174,9 @@ namespace DAL.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("MatchIsLive")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Opponent1Id")
                         .HasColumnType("int");
