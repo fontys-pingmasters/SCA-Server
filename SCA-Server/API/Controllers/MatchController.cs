@@ -23,7 +23,7 @@ public class MatchController : ControllerBase
         _matchHub = matchHub;
     }
     
-    /*[Authorize]*/
+    [Authorize]
     [HttpPost]
     public IActionResult CreateMatch( [FromBody] CreateMatchReq createMatchReq)
     {
@@ -37,7 +37,7 @@ public class MatchController : ControllerBase
         return Ok(match);
     }
     
-    /*[Authorize]*/
+    [Authorize]
     [HttpPatch]
     public async Task<IActionResult> UpdateMatch([FromBody] UpdateMatchReq updateMatchReq)
     {

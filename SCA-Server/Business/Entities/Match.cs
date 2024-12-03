@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Business.Entities;
 
 public class Match : Common
