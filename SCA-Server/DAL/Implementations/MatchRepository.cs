@@ -36,7 +36,10 @@ public class MatchRepository(ApplicationDbContext context) : IMatchRepository
             .Include(m => m.Player2)
             .Include(m => m.Opponent1)
             .Include(m => m.Opponent2)
-            .Where(m => m.Id == userId).ToList();
+            .Where(m => m.Player1.Id == userId || m.Player2.Id == userId || 
+                m.Opponent1.Id == userId || m.Opponent2.Id == userId)
+            .OrderByDescending(m => m.CreatedAt)
+            .ToList();
     }
 
     public List<Match> GetAllMatches()

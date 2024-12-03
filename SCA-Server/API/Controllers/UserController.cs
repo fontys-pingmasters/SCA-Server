@@ -23,6 +23,17 @@ public class UserController : ControllerBase
         var result = _userService.GetAllUsers();
         return Ok(result);
     }
+
+    [Authorize]
+    [HttpGet("Id")]
+    public IActionResult GetUserById()
+    {
+		var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+			throw new Exception("Could not find current user id in token"));
+
+        var user = _userService.GetUserById(userId);
+        return Ok(user);
+	}
     
     [Authorize]
     [HttpGet]
