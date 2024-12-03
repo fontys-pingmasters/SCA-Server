@@ -63,6 +63,16 @@ public class MatchController : ControllerBase
         return Ok(match);
     }
 
+    [HttpGet("user/{userId}")]
+    public IActionResult GetMatchesByUserId()
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+            throw new Exception("Could not find current user id in token"));
+
+        var matches = _matchService.GetMatchesByUserId(userId);
+        return Ok(matches);
+    }
+
     [HttpGet]
     public IActionResult GetAllMatches()
     {
