@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Business.Enums;
 
 namespace Business.Entities;
@@ -12,8 +13,12 @@ public class User : Common
 
     public ICollection<EloHistory> EloHistories { get; set; } = new List<EloHistory>();
     public ICollection<TeamMembership> TeamMemberships { get; set; } = new List<TeamMembership>();
+    [JsonIgnore]
     public ICollection<Match> MatchesAsPlayer1 { get; set; } = new List<Match>();
+    [JsonIgnore]
     public ICollection<Match> MatchesAsPlayer2 { get; set; } = new List<Match>();
+    [JsonIgnore]
     public ICollection<Match> MatchesAsOpponent1 { get; set; } = new List<Match>();
+    [JsonIgnore]
     public ICollection<Match> MatchesAsOpponent2 { get; set; } = new List<Match>();
 }

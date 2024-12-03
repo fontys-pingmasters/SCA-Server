@@ -29,4 +29,9 @@ public class MatchRepository(ApplicationDbContext context) : IMatchRepository
             .Include(m => m.Opponent2)
             .FirstOrDefault(m => m.Id == matchId) ?? throw new ResourceNotFoundException($"Match with id:{matchId} not found");
     }
+
+    public List<Match> GetAllMatches()
+    {
+        return context.Matches.ToList();
+    }
 }
