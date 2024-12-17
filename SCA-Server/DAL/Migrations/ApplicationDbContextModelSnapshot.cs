@@ -172,6 +172,9 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool>("MatchIsLive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("Opponent1Id")
                         .HasColumnType("int");
 

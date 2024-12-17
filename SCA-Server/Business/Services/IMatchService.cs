@@ -7,4 +7,7 @@ public interface IMatchService
 {
     Match CreateMatch(CreateMatchReq createMatchReq);
     Match UpdateMatch(UpdateMatchReq updateMatchReq);
+    Match GetMatchById(int matchId);
+    List<Match> GetMatchesByUserId(int userId);
+    List<Match> GetAllMatches();
 }

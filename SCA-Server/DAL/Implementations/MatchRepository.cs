@@ -29,4 +29,21 @@ public class MatchRepository(ApplicationDbContext context) : IMatchRepository
             .Include(m => m.Opponent2)
             .FirstOrDefault(m => m.Id == matchId) ?? throw new ResourceNotFoundException($"Match with id:{matchId} not found");
     }
+
+    public List<Match> GetMatchesByUserId(int userId)
+    {
+        return context.Matches.Include(m => m.Player1)
+            .Include(m => m.Player2)
+            .Include(m => m.Opponent1)
+            .Include(m => m.Opponent2)
+            .Where(m => m.Player1.Id == userId || m.Player2.Id == userId || 
+                m.Opponent1.Id == userId || m.Opponent2.Id == userId)
+            .OrderByDescending(m => m.CreatedAt)
+            .ToList();
+    }
+
+    public List<Match> GetAllMatches()
+    {
+        return context.Matches.ToList();
+    }
 }

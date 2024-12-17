@@ -2,8 +2,10 @@ using System.Text;
 using Business;
 using DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SCA_Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,12 +16,20 @@ builder.Services.AddCors(options =>
 		corsPolicyBuilder.WithOrigins("http://localhost:5173")
 			.AllowAnyHeader()
 			.AllowAnyMethod()
-			.AllowCredentials();
+			.AllowCredentials()
+            .SetIsOriginAllowed(_ => true);
 	});
 });
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddSignalR(options =>
+{
+    options.KeepAliveInterval = TimeSpan.FromMinutes(1);
+    options.ClientTimeoutInterval = TimeSpan.FromMinutes(2);
+    options.EnableDetailedErrors = true;
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -97,7 +107,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
+app.UseWebSockets();
+
+app.MapHub<MatchHub>("/matchHub");
+
 
 app.UseCors();
 

@@ -52,6 +52,21 @@ public class MatchService : IMatchService
         return _matchRepository.UpdateMatch(match);
     }
 
+    public Match GetMatchById(int matchId)
+    {
+        return _matchRepository.GetMatchById(matchId);
+    }
+
+    public List<Match> GetMatchesByUserId(int userId)
+    {
+        return _matchRepository.GetMatchesByUserId(userId);
+    }
+
+    public List<Match> GetAllMatches()
+    {
+        return _matchRepository.GetAllMatches();
+    }
+
     private void SendMatchRequests(Match match, int senderUserId)
     {
         var matchParticipants = GetMatchParticipants(match);

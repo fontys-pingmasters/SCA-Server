@@ -4,6 +4,8 @@ using Business.Mappers;
 using Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using SCA_Server.Hubs;
 
 namespace SCA_Server.Controllers;
 
@@ -12,14 +14,16 @@ namespace SCA_Server.Controllers;
 public class MatchController : ControllerBase
 {
     
-    IMatchService _matchService;
+    private readonly IMatchService _matchService;
+    private readonly IHubContext<MatchHub> _matchHub;
     
-    public MatchController(IMatchService matchService)
+    public MatchController(IMatchService matchService, IHubContext<MatchHub> matchHub)
     {
         _matchService = matchService;
+        _matchHub = matchHub;
     }
     
-    /*[Authorize]*/
+    [Authorize]
     [HttpPost]
     public IActionResult CreateMatch( [FromBody] CreateMatchReq createMatchReq)
     {
@@ -33,9 +37,9 @@ public class MatchController : ControllerBase
         return Ok(match);
     }
     
-    /*[Authorize]*/
+    [Authorize]
     [HttpPatch]
-    public IActionResult UpdateMatch([FromBody] UpdateMatchReq updateMatchReq)
+    public async Task<IActionResult> UpdateMatch([FromBody] UpdateMatchReq updateMatchReq)
     {
         updateMatchReq.CreatorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
                                              throw new Exception("Could not find current user id in token"));
@@ -44,6 +48,35 @@ public class MatchController : ControllerBase
         
         var match = MatchMapper.MatchToMatchDto(result);
         
+        var allMatches = _matchService.GetAllMatches();
+
+
+        await _matchHub.Clients.All.SendAsync("ReceiveMessage", allMatches);
+        
         return Ok(match);
+    }
+
+    [HttpGet("{matchId}")]
+    public IActionResult GetMatchById(int matchId)
+    {
+        var match = _matchService.GetMatchById(matchId);
+        return Ok(match);
+    }
+
+    [HttpGet("user/{userId}")]
+    public IActionResult GetMatchesByUserId()
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+            throw new Exception("Could not find current user id in token"));
+
+        var matches = _matchService.GetMatchesByUserId(userId);
+        return Ok(matches);
+    }
+
+    [HttpGet]
+    public IActionResult GetAllMatches()
+    {
+        var matches = _matchService.GetAllMatches();
+        return Ok(matches);
     }
 }
