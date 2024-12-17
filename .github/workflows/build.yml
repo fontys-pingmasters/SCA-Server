@@ -1,16 +1,37 @@
 name: Build docker image
 
 on:
+  # If: Manual trigger
+  # Do: Build ':acceptance'
   workflow_dispatch:
+    # If: Manual trigger & set to true
+    # Do: build ':latest'
+    inputs:
+      perform_deploy:
+        required: true
+        type: boolean
+        default: false
+        description: 'Deploy to production'
+
   push:
     branches:
+      # If: Push to develop
+      # Do: Build ':testing'
       - develop
+      # If: Push to main
+      # Do: Build ':acceptance'
       - main
+
+  pull_request:
+    branches:
+      # If: Pull request to develop
+      # Do: Build ':pr-<id>'
+      - develop
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  IMAGE_TAG: ${{ github.ref == 'refs/heads/main' && 'acceptance' || github.ref == 'refs/heads/develop' && 'testing' || 'latest' }}
+  IMAGE_TAG: ${{ inputs.perform_deploy && 'latest' || github.event_name == 'pull_request' && 'pr-${{ github.event.number }}' || github.ref == 'refs/heads/main' && 'acceptance' || github.ref == 'refs/heads/develop' && 'testing' }}
 
 jobs:
   build:
