@@ -10,7 +10,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  IMAGE_TAG: ${{ github.ref == 'refs/heads/main' && 'acceptance' || github.ref == 'refs/heads/develop' && 'testing' || 'latest' }}
+  IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && 'latest' || github.ref == 'refs/heads/main' && 'acceptance' || github.ref == 'refs/heads/develop' && 'testing' }}
 
 jobs:
   build:
