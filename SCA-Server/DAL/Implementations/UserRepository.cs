@@ -13,6 +13,13 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
         return context.Users.FirstOrDefault(u => u.Id == user.Id) ?? throw new ResourceNotFoundException($"User with id:{user.Id} not found");
     }
 
+    public User? UpdateUser(User user)
+    {
+        context.Users.Update(user);
+        context.SaveChanges();
+        return context.Users.FirstOrDefault(u => u.Id == user.Id) ?? throw new ResourceNotFoundException($"User with id:{user.Id} not found");
+    }
+
     public User? GetUserById(int id)
     {
         return context.Users.FirstOrDefault(u => u.Id == id);

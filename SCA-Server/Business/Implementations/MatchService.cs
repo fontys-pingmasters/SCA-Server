@@ -12,12 +12,15 @@ public class MatchService : IMatchService
     IUserRepository _userRepository;
     IMatchRepository _matchRepository;
     IMatchRequestRepository _matchRequestRepository;
+    IEloHistoryRepository _eloHistoryRepository;
     
-    public MatchService(IUserRepository userRepository, IMatchRepository matchRepository, IMatchRequestRepository matchRequestRepository)
+    public MatchService(IUserRepository userRepository, IMatchRepository matchRepository,
+        IMatchRequestRepository matchRequestRepository, IEloHistoryRepository eloHistoryRepository)
     {
         _userRepository = userRepository;
         _matchRepository = matchRepository;
         _matchRequestRepository = matchRequestRepository;
+        _eloHistoryRepository = eloHistoryRepository;
     }
     public Match CreateMatch(CreateMatchReq createMatchReq)
     {
@@ -42,17 +45,66 @@ public class MatchService : IMatchService
     public Match UpdateMatch(UpdateMatchReq updateMatchReq)
     {
         var match = _matchRepository.GetMatchById(updateMatchReq.MatchId);
-        
+
         if (match.Player1.Id != updateMatchReq.CreatorId)
             throw new Exception("Only the creator of the match can update it");
-        
+
         match.PlayerScore = updateMatchReq.PlayerScore;
         match.OpponentScore = updateMatchReq.OpponentScore;
+
+        var player1OldElo = match.Player1.Elo;
+        var opponent1OldElo = match.Opponent1.Elo;
+
+        var (player1NewElo, opponent1NewElo) = CalculateElo(match);
+
+        match.Player1.Elo = player1NewElo;
+        match.Opponent1.Elo = opponent1NewElo;
+
+        _userRepository.UpdateUser(match.Player1);
+        _userRepository.UpdateUser(match.Opponent1);
+
+        EloHistory eloHistoryPlayer1 = new()
+        {
+            User = match.Player1,
+            Elo = player1NewElo,
+            EloChange = player1NewElo - player1OldElo,
+            Match = match
+        };
+
+        EloHistory eloHistoryOpponent1 = new()
+        {
+            User = match.Opponent1,
+            Elo = opponent1NewElo,
+            EloChange = opponent1NewElo - opponent1OldElo,
+            Match = match
+        };
+
+        _eloHistoryRepository.CreateEloHistory(eloHistoryPlayer1);
+        _eloHistoryRepository.CreateEloHistory(eloHistoryOpponent1);
         
         return _matchRepository.UpdateMatch(match);
     }
 
-    public Match GetMatchById(int matchId)
+	private static (int player1NewElo, int opponent1NewElo) CalculateElo(Match match)
+	{
+		const int K = 32; // Sensitivity constant
+
+		double expectedPlayer1 = 1.0 / (1.0 + Math.Pow(10, (match.Opponent1.Elo - match.Player1.Elo) / 400.0));
+		double expectedOpponent1 = 1.0 / (1.0 + Math.Pow(10, (match.Player1.Elo - match.Opponent1.Elo) / 400.0));
+
+		// Determine actual results
+		double actualPlayer1 = match.PlayerScore > match.OpponentScore ? 1 : (match.PlayerScore == match.OpponentScore ? 0.5 : 0);
+		double actualOpponent1 = match.OpponentScore > match.PlayerScore ? 1 : (match.PlayerScore == match.OpponentScore ? 0.5 : 0);
+
+		// New Elo ratings
+		int newPlayer1Elo = (int)(match.Player1.Elo + K * (actualPlayer1 - expectedPlayer1));
+		int newOpponent1Elo = (int)(match.Opponent1.Elo + K * (actualOpponent1 - expectedOpponent1));
+
+		return (newPlayer1Elo, newOpponent1Elo);
+	}
+
+
+	public Match GetMatchById(int matchId)
     {
         return _matchRepository.GetMatchById(matchId);
     }

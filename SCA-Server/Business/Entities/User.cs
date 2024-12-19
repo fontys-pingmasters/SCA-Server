@@ -9,6 +9,7 @@ public class User : Common
     public string LastName { get; set; }
     public string Password { get; set; }
     public string Email { get; set; }
+    public int Elo { get; set; } = 1000;
     public Roles Role { get; set; } = Roles.User;
 
     public ICollection<EloHistory> EloHistories { get; set; } = new List<EloHistory>();
