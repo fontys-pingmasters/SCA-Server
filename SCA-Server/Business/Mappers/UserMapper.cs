@@ -26,6 +26,7 @@ public static class UserMapper
             Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            Elo = user.Elo,
             Email = user.Email,
             Role = user.Role
         };

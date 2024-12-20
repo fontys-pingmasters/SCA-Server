@@ -5,25 +5,25 @@
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class _26november : Migration
+    public partial class AddEloToUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "MatchIsLive",
-                table: "Matches",
-                type: "tinyint(1)",
+            migrationBuilder.AddColumn<int>(
+                name: "Elo",
+                table: "Users",
+                type: "int",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: 0);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "MatchIsLive",
-                table: "Matches");
+                name: "Elo",
+                table: "Users");
         }
     }
 }
