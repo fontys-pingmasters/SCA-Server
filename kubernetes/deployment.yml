@@ -6,6 +6,7 @@ spec:
   selector:
     matchLabels:
       app: sca-api
+  replicas: 1
   template:
     metadata:
       labels:
@@ -15,6 +16,54 @@ spec:
         - name: sca-api
           image: ghcr.io/fontys-pingmasters/sca-server
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: DB_HOST
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: DB_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: JWT_SECRET
+            - name: JWT_EXPIRES_IN
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: JWT_EXPIRES_IN
+            - name: JWT_AUDIENCE
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: JWT_AUDIENCE
+            - name: JWT_ISSUER
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: JWT_ISSUER
+            - name: FRONT_END_URL
+              valueFrom:
+                secretKeyRef:
+                  name: sca-api-secrets
+                  key: FRONT_END_URL
           resources:
             limits:
               memory: "1024Mi"
