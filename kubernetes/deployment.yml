@@ -15,3 +15,10 @@ spec:
         - name: sca-api
           image: ghcr.io/fontys-pingmasters/sca-server
           imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
