@@ -3,17 +3,21 @@ using System.Security.Claims;
 using System.Text;
 using Business.Entities;
 using Business.Services;
+using DotNetEnv;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Implementations;
 
-public class TokenService(IConfiguration configuration) : ITokenService
+public class TokenService : ITokenService
 {
+    public TokenService()
+    {
+        Env.Load();
+    }
     public string GenerateToken(User user)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
-        var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"] ?? string.Empty);
+        var secretKey = Encoding.UTF8.GetBytes(Env.GetString("JWT_SECRET") ?? string.Empty);
 
         var claims = new List<Claim>
         {
@@ -27,10 +31,10 @@ public class TokenService(IConfiguration configuration) : ITokenService
         );
 
         var tokenOptions = new JwtSecurityToken(
-            issuer: jwtSettings["Issuer"],
-            audience: jwtSettings["Audience"],
+            issuer: Env.GetString("JWT_ISSUER"),
+            audience: Env.GetString("JWT_AUDIENCE"),
             claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["ExpiryMinutes"])),
+            expires: DateTime.Now.AddMinutes(Convert.ToDouble(Env.GetString("JWT_EXPIRATION_TIME"))),
             signingCredentials: signingCredentials
         );
 

@@ -1,6 +1,7 @@
 using System.Text;
 using Business;
 using DAL;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
@@ -9,11 +10,13 @@ using SCA_Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Env.Load();
+
 builder.Services.AddCors(options =>
 {
 	options.AddDefaultPolicy(corsPolicyBuilder =>
 	{
-		corsPolicyBuilder.WithOrigins("http://localhost:5173")
+		corsPolicyBuilder.WithOrigins(Env.GetString("FRONT_END_URL"))
 			.AllowAnyHeader()
 			.AllowAnyMethod()
 			.AllowCredentials()
@@ -31,14 +34,12 @@ builder.Services.AddSignalR(options =>
     options.EnableDetailedErrors = true;
 });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = $"Server={Env.GetString("DB_HOST")};Database={Env.GetString("DB_NAME")};User Id={Env.GetString("DB_USER")};Password={Env.GetString("DB_PASSWORD")};";
 
 builder.Services.AddDAL(connectionString);
 builder.Services.AddBusiness();
 
-
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
+var secretKey = Encoding.UTF8.GetBytes(Env.GetString("JWT_SECRET"));
 
 builder.Services.AddAuthentication(options =>
     {
@@ -53,8 +54,8 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"],
+            ValidIssuer = Env.GetString("JWT_ISSUER"),
+            ValidAudience = Env.GetString("JWT_AUDIENCE"),
             IssuerSigningKey = new SymmetricSecurityKey(secretKey),
             RoleClaimType = "typ"
         };
