@@ -44,6 +44,10 @@ public class MatchRepository(ApplicationDbContext context) : IMatchRepository
 
     public List<Match> GetAllMatches()
     {
-        return context.Matches.ToList();
+        return context.Matches.Include(m => m.Player1)
+            .Include(m => m.Player2)
+			.Include(m => m.Opponent1)
+			.Include(m => m.Opponent2)
+			.ToList();
     }
 }

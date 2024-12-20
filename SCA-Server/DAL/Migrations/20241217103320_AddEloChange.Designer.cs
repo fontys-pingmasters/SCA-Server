@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241126105608_26november")]
-    partial class _26november
+    [Migration("20241217103320_AddEloChange")]
+    partial class AddEloChange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,6 +144,9 @@ namespace DAL.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("Elo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EloChange")
                         .HasColumnType("int");
 
                     b.Property<int>("MatchId")
@@ -317,6 +320,9 @@ namespace DAL.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Elo")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()

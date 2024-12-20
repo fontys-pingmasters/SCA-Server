@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMatchRequestRepository, MatchRequestRepository>();
         services.AddScoped<IMatchRepository, MatchRepository>();
+        services.AddScoped<IEloHistoryRepository, EloHistoryRepository>();
 
         return services;
     }

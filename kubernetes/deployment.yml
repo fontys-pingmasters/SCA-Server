@@ -1,0 +1,17 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sca-api
+spec:
+  selector:
+    matchLabels:
+      app: sca-api
+  template:
+    metadata:
+      labels:
+        app: sca-api
+    spec:
+      containers:
+        - name: sca-api
+          image: ghcr.io/fontys-pingmasters/sca-server
+          imagePullPolicy: Always
