@@ -135,8 +135,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/ansible/compose
-            docker compose -f dockercomposetest.yml down
-            docker compose -f dockercomposetest.yml up --build -d
+            docker compose -f dockercomposetest.yml pull
+            docker compose -f dockercomposetest.yml up -d
 
   deploy-acceptance:
     runs-on: production-runner
