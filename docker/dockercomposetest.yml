@@ -1,0 +1,77 @@
+services:
+  db:
+    image: mysql:9
+    container_name: secure_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/my.cnf:/etc/mysql/my.cnf
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - private_network
+
+  sca-server:
+    image: sca-server
+    environment:
+      - FRONT_END_URL=https://test.pongello.nl
+      - DB_HOST="db"
+      - DB_NAME="securedb"
+      - DB_USER="swremotedb"
+      - DB_PASSWORD=<fix secret>
+      - JWT_SECRET=<fix secret>
+      - JWT_EXPIRES_IN=60
+      - JWT_AUDIENCE=https://test.pongello.nl
+      - JWT_ISSUER=https://test.pongello.nl
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - private_network
+      - proxy_network
+
+  sca-client:
+    image: sca-client
+    ports:
+      - "81:80"
+    depends_on:
+      - sca-server
+    networks:
+      - private_network
+      - proxy_network
+
+  caddy:
+    image: caddy-with-cloudflare
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy:/data
+      - ./config/caddy:/config
+      - ./cloudflare:/cloudflare
+    environment:
+      - CF_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+    networks:
+      - private_network
+      - proxy_network
+
+volumes:
+  db_data:
+
+networks:
+  private_network:
+    driver: bridge
+  proxy_network:
+    driver: bridge
