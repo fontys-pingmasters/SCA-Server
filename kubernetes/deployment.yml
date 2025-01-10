@@ -1,19 +1,19 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: sca-api
+  name: sca-server
 spec:
   selector:
     matchLabels:
-      app: sca-api
+      app: sca-server
   replicas: 1
   template:
     metadata:
       labels:
-        app: sca-api
+        app: sca-server
     spec:
       containers:
-        - name: sca-api
+        - name: sca-server
           image: ghcr.io/fontys-pingmasters/sca-server
           imagePullPolicy: Always
           ports:
@@ -22,47 +22,47 @@ spec:
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: DB_HOST
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: DB_NAME
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: DB_USER
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: DB_PASSWORD
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: JWT_SECRET
             - name: JWT_EXPIRES_IN
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: JWT_EXPIRES_IN
             - name: JWT_AUDIENCE
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: JWT_AUDIENCE
             - name: JWT_ISSUER
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: JWT_ISSUER
             - name: FRONT_END_URL
               valueFrom:
                 secretKeyRef:
-                  name: sca-api-secrets
+                  name: sca-server-secrets
                   key: FRONT_END_URL
           resources:
             limits:

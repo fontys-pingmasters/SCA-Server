@@ -123,7 +123,7 @@ jobs:
 
       - name: copy paste compose file
         run: |
-          scp ./docker/dockercomposetest.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/home/ansible/compose/
+          scp ./docker/docker-compose.server.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/home/ansible/compose/
       
       #ssh shit
       - name: Deploy to test server
@@ -135,8 +135,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/ansible/compose
-            docker compose -f dockercomposetest.yml pull
-            docker compose -f dockercomposetest.yml up -d
+            docker compose -f docker-compose.server.yml pull
+            docker compose -f docker-compose.server.yml up -d
 
   deploy-acceptance:
     runs-on: production-runner
