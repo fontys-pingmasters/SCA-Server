@@ -1,0 +1,21 @@
+services:
+  caddy:
+    image: caddy-with-cloudflare
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy:/data
+      - ./config/caddy:/config
+      - ./cloudflare:/cloudflare
+    environment:
+      - CF_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+    networks:
+      - sca_network
+
+networks:
+  sca_network:
+    driver: bridge
+    attachable: true
