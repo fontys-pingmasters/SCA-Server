@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   db:
     image: mysql:9
@@ -22,14 +24,20 @@ services:
       - private_network
 
   sca-server:
-    image: sca-server
+    image: ghcr.io/fontys-pingmasters/sca-server:testing
+#    build:
+#      context: sca/SCA-Server/SCA-Server
+#      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
     environment:
       - FRONT_END_URL=https://test.pongello.nl
       - DB_HOST="db"
       - DB_NAME="securedb"
       - DB_USER="swremotedb"
-      - DB_PASSWORD=<fix secret>
-      - JWT_SECRET=<fix secret>
+      - DB_PASSWORD="YellowRed63!"
+      - JWT_SECRET=Mysecretkeyjfdshjdfskjdfkdfsdfskdf
       - JWT_EXPIRES_IN=60
       - JWT_AUDIENCE=https://test.pongello.nl
       - JWT_ISSUER=https://test.pongello.nl
@@ -41,7 +49,14 @@ services:
       - proxy_network
 
   sca-client:
-    image: sca-client
+    image: ghcr.io/fontys-pingmasters/sca-client:testing
+#    build:
+#      context: sca/SCA-Client/sca_frontend/sca_frontend
+#      dockerfile: Dockerfile
+#    environment:
+#      - VITE_BACKEND_URL=https://api-test.pongello.nl
+#      - VITE_BACKEND_SECURE=https://api-test.pongello.nl
+#      - VITE_BACKEND_PORT=443
     ports:
       - "81:80"
     depends_on:
@@ -66,6 +81,7 @@ services:
     networks:
       - private_network
       - proxy_network
+
 
 volumes:
   db_data:
