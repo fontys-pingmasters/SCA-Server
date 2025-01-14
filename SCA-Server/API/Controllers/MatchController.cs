@@ -25,7 +25,7 @@ public class MatchController : ControllerBase
     
     [Authorize]
     [HttpPost]
-    public IActionResult CreateMatch( [FromBody] CreateMatchReq createMatchReq)
+    public async Task<IActionResult> CreateMatch( [FromBody] CreateMatchReq createMatchReq)
     {
         createMatchReq.CreatorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
                                              throw new Exception("Could not find current user id in token"));
