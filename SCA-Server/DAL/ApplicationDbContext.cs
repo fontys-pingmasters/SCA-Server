@@ -25,11 +25,6 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
-        
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.EloHistories)
-            .WithOne(eh => eh.User)
-            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<User>()
             .HasMany(u => u.TeamMemberships)
@@ -127,12 +122,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Match>()
             .HasMany(m => m.MatchRequests)
             .WithOne(mr => mr.Match)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // Define EloHistory relationships
-        modelBuilder.Entity<EloHistory>()
-            .HasOne(eh => eh.User)
-            .WithMany(u => u.EloHistories)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<EloHistory>()

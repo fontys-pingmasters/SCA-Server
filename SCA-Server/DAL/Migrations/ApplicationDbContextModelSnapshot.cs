@@ -45,7 +45,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clubs");
+                    b.ToTable("Clubs", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.Competition", b =>
@@ -68,7 +68,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Competitions");
+                    b.ToTable("Competitions", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.CompetitionMatch", b =>
@@ -97,7 +97,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("MatchId");
 
-                    b.ToTable("CompetitionMatches");
+                    b.ToTable("CompetitionMatches", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.CompetitionMembership", b =>
@@ -126,7 +126,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("CompetitionMemberships");
+                    b.ToTable("CompetitionMemberships", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.EloHistory", b =>
@@ -161,7 +161,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("EloHistories");
+                    b.ToTable("EloHistories", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.Match", b =>
@@ -209,7 +209,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("Player2Id");
 
-                    b.ToTable("Matches");
+                    b.ToTable("Matches", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.MatchRequest", b =>
@@ -247,7 +247,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("MatchRequests");
+                    b.ToTable("MatchRequests", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.Team", b =>
@@ -275,7 +275,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("ClubId");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Teams", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.TeamMembership", b =>
@@ -304,7 +304,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TeamMemberships");
+                    b.ToTable("TeamMemberships", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.User", b =>
@@ -348,7 +348,7 @@ namespace DAL.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Business.Entities.CompetitionMatch", b =>

@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Repositories
+namespace Business.Services
 {
-	public interface IEloHistoryRepository
+	public interface IEloHistoryService
 	{
-		EloHistory CreateEloHistory(EloHistory eloHistory);
 		List<EloHistory> GetAllEloHistoriesByUserId(int userId);
 	}
 }
